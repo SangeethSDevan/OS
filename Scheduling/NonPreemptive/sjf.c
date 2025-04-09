@@ -20,29 +20,33 @@ void sort(struct process p[],int n){
 }
 void sjf(struct process p[],int n){
     sort(p,n);
-    int shortIndex=0,time=0;
+    int completed=0,isComplete[n];
+    int time=0;
     for(int i=0;i<n;i++){
-        shortIndex=i;
-        for(int j=i;j<n;j++){
-            if(p[j].bt<p[shortIndex].bt && p[j].at<time){
-                shortIndex=j;
+        isComplete[i]=n;
+    }
+    while(completed<n){
+        int shortestBT=-1,sProcess=-1;
+        for(int i=0;i<n;i++){
+            if(!isComplete[i] && p[i].at<=time){
+                if(p[i].bt<shortestBT || shortestBT==-1){
+                    shortestBT=p[i].bt;
+                    sProcess=i;
+                }
             }
         }
-        if(shortIndex!=i){
-            struct process temp=p[i];
-            p[i]=p[shortIndex];
-            p[shortIndex]=temp;
+        if(sProcess==-1){
+            time++;
+            continue;
         }
-        if(time<p[i].at){
-            time=p[i].at;
-        }
-        printf("| P%d ",p[i].id);
-        p[i].ct=time+p[i].bt;
-        time=p[i].ct;
-        p[i].tat=p[i].ct-p[i].at;
-        p[i].wt=p[i].tat-p[i].bt;
+        p[sProcess].ct=time+p[sProcess].bt;
+        printf(" P%d (%d - %d) | ",p[sProcess].id,time,p[sProcess].ct);
+        time=p[sProcess].ct;
+        p[sProcess].tat=p[sProcess].ct-p[sProcess].at;
+        p[sProcess].wt=p[sProcess].tat-p[sProcess].bt;
+        completed++;
+        isComplete[sProcess]=1;
     }
-    printf("\n");
 }
 void display(struct process p[],int n){
     printf("ID\tAT\tBT\tCT\tTAT\tWT\n");

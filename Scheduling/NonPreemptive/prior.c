@@ -20,30 +20,55 @@ void sort(struct process p[],int n){
     }
 }
 void pPrior(struct process p[],int n){
-    int time=0;
-    float avgTAT=0,avgWT=0;
+    int time=0,completed=0;
+    int isComplete[n];
     for(int i=0;i<n;i++){
-        int selected=-1;
-        int highestPriority=__INT_MAX__;
-        for(int j=0;j<n;j++){
-            if(p[i].at<time && p[i].priority<highestPriority){
-                highestPriority=p[i].priority;
-                selected=i;
+        isComplete[i]=0;
+    }
+    while(completed<n){
+        int highP=-1,sProcess=-1;
+        for(int i=0;i<n;i++){
+            if(p[i].at<=time && !isComplete[i]){
+                if(highP==-1||p[i].priority<highP){
+                    highP=p[i].priority;
+                    sProcess=i;
+                }
             }
         }
-
-        if(selected==-1){
-            selected=i;
-            time=p[i].at;
+        if(sProcess==-1){
+            time++;
+            continue;
         }
-
-        if(selected!=i){
-            struct process temp=p[i];
-            p[i]=p[selected];
-            p[selected]=temp;
-        }
-        if(time<p[i].at){
-            time=p[i].at;
-        }
+        p[sProcess].ct=time+p[sProcess].bt;
+        printf(" P%d (%d - %d) | ",p[sProcess].id,time,p[sProcess].ct);
+        time=p[sProcess].ct;
+        p[sProcess].tat=p[sProcess].ct-p[sProcess].at;
+        p[sProcess].wt=p[sProcess].tat-p[sProcess].bt;
+        completed++;
+        isComplete[sProcess]=1;
     }
+}
+void display(struct process p[],int n){
+    printf("ID\tAT\tBT\tCT\tTAT\tWT\n");
+    for(int i=0;i<n;i++){
+        printf("%d\t%d\t%d\t%d\t%d\t%d\n",p[i].id,p[i].at,p[i].bt,p[i].ct,p[i].tat,p[i].wt);
+    }
+}
+int main() {
+    int n;
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+
+    struct process p[n];
+
+    for (int i = 0; i < n; i++) {
+        p[i].id = i + 1;
+        printf("Enter arrival time, burst time and priority for process %d: ", p[i].id);
+        scanf("%d %d %d", &p[i].at, &p[i].bt,&p[i].priority);
+    }
+
+    pPrior(p, n);
+    display(p, n);
+
+    return 0;
 }
