@@ -10,9 +10,9 @@ pthread_t philosophers[MAX];
 
 void * philosopher(void * num){
     int id=*(int *) num;
-    while(1){
         printf("Philosopher %d is thinking!\n",id);
-        if(id==MAX-1){
+        sleep(2);
+        if(id%2==0){
             sem_wait(&forks[id]);
             sem_wait(&forks[(id+1)%MAX]);
         }else{
@@ -24,7 +24,6 @@ void * philosopher(void * num){
         sleep(2);
         sem_post(&forks[id]);
         sem_post(&forks[(id+1)%MAX]);
-    }
 }
 void main(){
     int id[MAX];
