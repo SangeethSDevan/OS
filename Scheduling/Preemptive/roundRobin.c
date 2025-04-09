@@ -44,6 +44,9 @@ void roundRobin(struct process p[],int n,int quantam){
                 }
             }
         }
+        if(!flag){
+            time++;
+        }
     }
     printf("\n");
 }
