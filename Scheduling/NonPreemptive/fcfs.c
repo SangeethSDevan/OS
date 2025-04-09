@@ -30,6 +30,7 @@ void fcfs(struct process p[],int n){
             time=p[i].at;
         }
         p[i].ct=time+p[i].bt;
+        printf(" P%d (%d - %d)|",p[i].id,time,p[i].ct);
         time=p[i].ct;
         p[i].tat=p[i].ct-p[i].at;
         p[i].wt=p[i].tat-p[i].bt;
@@ -37,6 +38,7 @@ void fcfs(struct process p[],int n){
         tatAvg+=p[i].tat;
         wtAvg+=p[i].wt;
     }
+    printf("\n");
     printf("Average tat: %.3f\n",tatAvg/n);
     printf("AVerage wt: %.3f\n",wtAvg/n);
 }
