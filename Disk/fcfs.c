@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int abs(int a,int b){
-    return (a>b)?(a-b):(a-b);
+    return (a>b)?(a-b):(b-a);
 }
 void fcfs(int request[],int n,int head){
     int totalSeek=0;
@@ -10,7 +10,7 @@ void fcfs(int request[],int n,int head){
     printf("%d\t",head);
     for(int i=0;i<n;i++){
         printf("%d\t",request[i]);
-        totalSeek+=abs(head,request[i]);
+        totalSeek+=abs(current,request[i]);
         current=request[i];
     }
     printf("Total seek time: %d\n",totalSeek);

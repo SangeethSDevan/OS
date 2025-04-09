@@ -3,26 +3,27 @@
 #include <semaphore.h>
 #include <pthread.h>
 
-#define MAX 5
+#define MAX 5 
+
 int buffer[MAX],in=0,out=0;
-sem_t empty,full;
+sem_t full,empty;
 pthread_mutex_t mutex;
 
-void * producer(void * args){
+void* producer(void * num){
     for(int i=0;i<MAX;i++){
+        int item=i;
         sem_wait(&empty);
         pthread_mutex_lock(&mutex);
 
-        int item=i;
         buffer[in]=item;
-        printf("Produced item: %d\n",item);
         in=(in+1)%MAX;
+        printf("Produced item %d\n",item);
+        sleep(1);
 
+        sem_post(&full);
         pthread_mutex_unlock(&mutex);
-        sem_post(&full); 
-        sleep(1);     
+        sleep(1);
     }
-    return NULL;
 }
 void * consumer(void * args){
     for(int i=0;i<MAX;i++){
@@ -31,20 +32,17 @@ void * consumer(void * args){
 
         int item=buffer[out];
         out=(out+1)%MAX;
-        printf("Consumed item: %d\n",item);
+        printf("Consumed item %d\n",item);
 
+        sem_post(&empty);
         pthread_mutex_unlock(&mutex);
-        sem_wait(&empty);
         sleep(1);
     }
-    return NULL;
 }
-void main(){
+int main(){
     pthread_t prod,cons;
-    sem_init(&empty,0,MAX);
     sem_init(&full,0,0);
-    pthread_mutex_init(&mutex,NULL);
-
+    sem_init(&empty,0,MAX);
     pthread_create(&prod,NULL,producer,NULL);
     pthread_create(&cons,NULL,consumer,NULL);
 

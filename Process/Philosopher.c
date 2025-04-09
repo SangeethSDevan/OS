@@ -5,17 +5,40 @@
 
 #define MAX 5
 
-pthread_mutex_t forks[MAX];
-sem_t mutex;
+sem_t forks[MAX];
+pthread_t philosophers[MAX];
 
 void * philosopher(void * num){
-    int id=*(int *)num;
+    int id=*(int *) num;
     while(1){
         printf("Philosopher %d is thinking!\n",id);
-        sleep(1);
-        sem_wait(&mutex)
-        pthread_mutex_lock(&forks[id]);
-        pthread_mutex_unlock(&forks[(id+1)%MAX]);   
+        if(id==MAX-1){
+            sem_wait(&forks[id]);
+            sem_wait(&forks[(id+1)%MAX]);
+        }else{
+            sem_wait(&forks[(id+1)%MAX]);
+            sem_wait(&forks[id]);
+        }
+
         printf("Philosopher %d is eating!\n",id);
+        sleep(2);
+        sem_post(&forks[id]);
+        sem_post(&forks[(id+1)%MAX]);
+    }
+}
+void main(){
+    int id[MAX];
+    for(int i=0;i<MAX;i++){
+        sem_init(&forks[i],0,1);
+    }
+    for(int i=0;i<MAX;i++){
+        id[i]=i;
+        pthread_create(&philosophers[i],NULL,philosopher,&id[i]);
+    }
+    for(int i=0;i<MAX;i++){
+        pthread_join(philosophers[i],NULL);
+    }
+    for(int i=0;i<MAX;i++){
+        sem_destroy(&forks[i]);
     }
 }
