@@ -23,7 +23,7 @@ void sjf(struct process p[],int n){
     int completed=0,isComplete[n];
     int time=0;
     for(int i=0;i<n;i++){
-        isComplete[i]=n;
+        isComplete[i]=0;
     }
     while(completed<n){
         int shortestBT=-1,sProcess=-1;
@@ -47,6 +47,7 @@ void sjf(struct process p[],int n){
         completed++;
         isComplete[sProcess]=1;
     }
+    printf("\n");
 }
 void display(struct process p[],int n){
     printf("ID\tAT\tBT\tCT\tTAT\tWT\n");
