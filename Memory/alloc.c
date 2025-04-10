@@ -1,5 +1,14 @@
 #include <stdio.h>
-
+void display(int process[], int alloc[], int waste[], int n) {
+    printf("\nProcess\tSize\tBlock Allocated\tWaste\n");
+    for (int i = 0; i < n; i++) {
+        if (alloc[i] != -1) {
+            printf("P%d\t%d\tBlock %d\t\t%d\n", i + 1, process[i], alloc[i] + 1, waste[i]);
+        } else {
+            printf("P%d\t%d\tNot Allocated\t-\n", i + 1, process[i]);
+        }
+    }
+}
 void firstfit(int process[],int block[],int n,int m){
     int tempMemory[m],alloc[n],waste[n];
     for(int i=0;i<m;i++){
@@ -19,6 +28,7 @@ void firstfit(int process[],int block[],int n,int m){
             }
         }
     }
+    display(process,alloc,waste,n);
     //DISPLAY THE ALLOCTION DETAILS
 }
 void bestfit(int process[],int block[],int n,int m){
@@ -49,6 +59,7 @@ void bestfit(int process[],int block[],int n,int m){
             alloc[i]=bestIndex;
         }
     }
+    display(process,alloc,waste,n);
 }
 void worstfit(int process[],int block[],int n,int m){
     int worstIndex,maxWaste,tempMemory[n],waste[n],alloc[n];
@@ -77,6 +88,7 @@ void worstfit(int process[],int block[],int n,int m){
             alloc[i]=worstIndex;
         }
     }
+    display(process,alloc,waste,n);
 }
 int main() {
     int n, m, choice;
