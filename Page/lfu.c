@@ -9,23 +9,28 @@ void printFrames(int frames[],int f){
     }
     printf("\n");
 }
-int findLFU(int count[],int f){
+int findLFU(int count[],int times[],int f){
     int min=count[0],pos=0;
     for(int i=0;i<f;i++){
         if(count[i]<min){
             min=count[i];
             pos=i;
+        }else if(count[i]==min){
+            if(times[i]<times[pos]){
+                pos=i;
+            }
         }
     }
     return pos;
 }
 void lfu(int pages[],int n,int f){
-    int frames[f],count[f];
+    int frames[f],count[f],times[f],time=0;
     int pageFaults=0;
 
     for(int i=0;i<f;i++){
         frames[i]=-1;
         count[i]=0;
+        times[i]=0;
     }
     for(int i=0;i<n;i++){
         int hit=0;
@@ -33,6 +38,7 @@ void lfu(int pages[],int n,int f){
             if(frames[j]==pages[i]){
                 hit=1;
                 count[j]++;
+                times[j]++;
                 break;
             }
         }
@@ -45,10 +51,11 @@ void lfu(int pages[],int n,int f){
                 }
             }
             if(pos==-1){
-                pos=findLFU(count,f);
+                pos=findLFU(count,times,f);
             }
             frames[pos]=pages[i];
             count[pos]=1;
+            times[pos]=time++;
             pageFaults++;
         }
         printFrames(frames,f);
