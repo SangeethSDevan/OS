@@ -10,7 +10,7 @@ void printFrames(int frames[],int f){
     printf("\n");
 }
 int findLFU(int count[],int f){
-    int min=count[0],pos=-1;
+    int min=count[0],pos=0;
     for(int i=0;i<f;i++){
         if(count[i]<min){
             min=count[i];
